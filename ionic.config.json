@@ -1,0 +1,7 @@
+{
+  "name": "mi-taxi-rapido",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

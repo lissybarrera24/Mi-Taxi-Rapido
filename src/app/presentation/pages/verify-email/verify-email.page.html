@@ -1,0 +1,49 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/register" text="Back"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="brand-title">Tap’nPay<span class="brand-dot">●</span></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <main class="verify-shell">
+    <section class="verify-top" aria-label="Verify email address">
+      <h1>Enter the six-digit code for<br /><strong>{{ maskedEmail }}</strong></h1>
+      <p class="code-label">Enter six-digit code</p>
+
+      <form [formGroup]="verificationForm" (ngSubmit)="verifyEmail()" novalidate>
+        <div class="otp-wrap" [ngClass]="{ 'field-invalid': isTokenInvalid, 'field-valid': isTokenValid }">
+          <input type="text" id="token" formControlName="token" inputmode="none"
+            maxlength="6" placeholder="••••••" autocomplete="off"
+            readonly required aria-label="Six-digit verification code"
+            aria-describedby="token-error" [attr.aria-invalid]="isTokenInvalid"
+            (keydown)="onOtpKeydown($event)" />
+          <span *ngIf="isTokenValid" class="success-mark" aria-label="Code format is valid">✓</span>
+        </div>
+        <p *ngIf="tokenError" id="token-error" class="field-error">{{ tokenError }}</p>
+        <p class="demo-hint">Demo mode: no email or verification code has been sent.</p>
+        <p *ngIf="showDemoNotice" class="demo-result" role="status">
+          Valid six-digit format. Connect a verification API to check the real code.
+        </p>
+
+        <div class="keypad" aria-label="Numeric keypad">
+          <div *ngFor="let keypadRow of keypadRows" class="keypad-row">
+            <ng-container *ngFor="let key of keypadRow">
+              <button *ngIf="key !== ''" type="button" class="keypad-button"
+                [attr.aria-label]="key === 'delete' ? 'Delete last digit' : 'Digit ' + key"
+                (click)="key === 'delete' ? removeLastDigit() : appendDigit(key)">
+                {{ key === 'delete' ? '⌫' : key }}
+              </button>
+              <span *ngIf="key === ''" class="keypad-spacer" aria-hidden="true"></span>
+            </ng-container>
+          </div>
+        </div>
+
+        <ion-button class="verify-button" type="submit" expand="block"
+          [disabled]="verificationForm.invalid">Verify</ion-button>
+      </form>
+    </section>
+  </main>
+</ion-content>

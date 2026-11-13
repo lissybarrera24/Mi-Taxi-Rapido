@@ -1,0 +1,31 @@
+:host { --brand-purple: #5932bd; color: #17171b; }
+ion-toolbar { --background: white; --min-height: 64px; }
+ion-back-button { --color: #315c99; --icon-font-size: 19px; }
+ion-content { --background: #fff; }
+.brand-title { color: #482b91; font-size: 21px; font-weight: 800; text-align: center; }
+.brand-dot { color: #f3c540; font-size: 14px; vertical-align: top; }
+.verify-shell { width: min(100%, 440px); margin: 0 auto; padding: 26px 22px 24px; min-height: 100%; }
+.verify-top h1 { font-size: 17px; font-weight: 500; line-height: 1.4; text-align: center; margin: 4px 0 31px; }
+.verify-top h1 strong { font-weight: 700; }
+.code-label { text-align: center; margin: 0 0 10px; color: #929398; font-size: 14px; }
+.verify-top form { display: flex; flex-direction: column; }
+.otp-wrap { display: flex; margin: 0 auto; width: 245px; height: 75px; align-items: center; border-bottom: 2px solid #32206f; }
+.otp-wrap input { width: 100%; font-size: 37px; line-height: 1.3; letter-spacing: 5px; text-align: center; padding: 0;
+  color: #18181b; background: transparent; border: 0; outline: none; }
+.otp-wrap input::placeholder { color: #c6c8ce; }
+.otp-wrap.field-invalid { border: 2px solid red; border-radius: 4px; }
+.otp-wrap.field-valid { border-bottom-color: #368248; }
+.success-mark { font-size: 22px; color: #38834b; flex-shrink: 0; }
+.field-error { color: #c71a1a; text-align: center; font-size: 12px; line-height: 1.3; margin: 8px 0 0; }
+.demo-hint { margin: 18px auto 0; color: #74747b; max-width: 310px; font-size: 12px; text-align: center; line-height: 1.45; }
+.demo-result { text-align: center; color: #24603a; background: #f0fbf2; border-radius: 6px; padding: 10px; font-size: 12px; }
+.keypad { margin: clamp(62px, 12vh, 114px) auto 0; width: 100%; }
+.keypad-row { display: grid; grid-template-columns: repeat(3, 1fr); justify-items: stretch; }
+.keypad-button, .keypad-spacer { min-height: 65px; }
+.keypad-button { background: transparent; border: 0; color: #15151a; font-size: 23px; font-weight: 500; cursor: pointer; }
+.keypad-button:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: -4px; border-radius: 6px; }
+.keypad-button:active { background: #f2eefd; border-radius: 6px; }
+.verify-button { --background: var(--brand-purple); --border-radius: 4px; --box-shadow: none; height: 51px;
+  font-weight: 650; font-size: 15px; text-transform: none; margin-top: 28px; }
+.verify-button.button-disabled { opacity: .5; }
+@media (max-height: 690px) { .keypad { margin-top: 28px; } .keypad-button, .keypad-spacer { min-height: 54px; } }

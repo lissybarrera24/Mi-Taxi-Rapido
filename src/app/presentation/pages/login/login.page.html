@@ -1,0 +1,79 @@
+<ion-content [fullscreen]="true">
+  <main class="login-layout">
+    <section class="hero" aria-label="Acceso seguro Tap'nPay">
+      <div class="brand" aria-label="Tap'nPay">
+        Tap’nPay<span class="brand-spark" aria-hidden="true"><b></b><b></b></span>
+      </div>
+      <svg class="security-illustration" viewBox="0 0 280 245" role="img" aria-label="Escudo de seguridad con candado">
+        <defs>
+          <linearGradient id="shieldLine" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#9659ff"></stop>
+            <stop offset="1" stop-color="#6539d9"></stop>
+          </linearGradient>
+          <linearGradient id="lockFill" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#9960f9"></stop>
+            <stop offset="1" stop-color="#5b32ca"></stop>
+          </linearGradient>
+        </defs>
+        <ellipse cx="141" cy="225" rx="94" ry="5" fill="#ded9f4"></ellipse>
+        <path d="M140 14 L215 41 V143 C215 183 183 208 140 225 C97 208 65 183 65 143 V41 Z"
+          fill="#e6e0ff" stroke="url(#shieldLine)" stroke-width="10"></path>
+        <path d="M140 31 L199 51 V141 C199 174 174 194 140 209 C106 194 81 174 81 141 V51 Z"
+          fill="none" stroke="white" stroke-width="4"></path>
+        <path d="M165 123 V112 C165 91 179 79 196 79 C213 79 224 92 224 111 V128"
+          fill="none" stroke="#ac98e8" stroke-width="10" stroke-linecap="round"></path>
+        <rect x="156" y="119" width="77" height="70" rx="12" fill="url(#lockFill)"></rect>
+        <path d="M176 152 L190 167 L216 139" fill="none" stroke="#fff"
+          stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </section>
+
+    <section class="form-panel">
+      <div class="form-inner">
+        <h1>Inicio de Sesión</h1>
+        <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" novalidate>
+          <div class="field">
+            <label for="login-email">Correo electrónico</label>
+            <input id="login-email" type="email" inputmode="email" autocomplete="email"
+              formControlName="email" placeholder="Ingrese su correo"
+              [class.invalid]="isEmailInvalid" [attr.aria-invalid]="isEmailInvalid"
+              aria-describedby="login-email-error" />
+            <p id="login-email-error" class="field-error" *ngIf="isEmailInvalid" role="alert">{{ emailError }}</p>
+          </div>
+
+          <div class="field">
+            <label for="login-password">Contraseña</label>
+            <div class="password-field" [class.invalid]="isPasswordInvalid">
+              <input id="login-password" [type]="showPassword ? 'text' : 'password'"
+                autocomplete="current-password" formControlName="password"
+                placeholder="Ingrese su contraseña"
+                [attr.aria-invalid]="isPasswordInvalid" aria-describedby="login-password-error" />
+              <button type="button" class="eye-button" (click)="togglePassword()"
+                [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                <ion-icon [name]="showPassword ? 'eye-outline' : 'eye-off-outline'" aria-hidden="true"></ion-icon>
+              </button>
+            </div>
+            <p id="login-password-error" class="field-error" *ngIf="isPasswordInvalid" role="alert">{{ passwordError }}</p>
+          </div>
+
+          <button type="button" class="forgot-button" (click)="forgotPassword()">¿Olvidaste tu contraseña?</button>
+
+          <div class="submit-area">
+            <ion-button type="submit" expand="block" class="primary-button"
+              [disabled]="loginForm.invalid || isLoading">Ingresar</ion-button>
+            <button *ngIf="loginForm.invalid && !isLoading" type="button"
+              class="invalid-submit-overlay" (click)="notifyInvalid()"
+              aria-label="Ingresar: corregir campos inválidos"></button>
+          </div>
+        </form>
+        <p class="register-link">¿No tienes cuenta? <a routerLink="/register">Crear cuenta</a></p>
+        <p class="demo-disclaimer">Demostración académica: acceso simulado, sin servidor.</p>
+      </div>
+    </section>
+  </main>
+</ion-content>
+
+<ion-loading [isOpen]="isLoading" message="Validando credenciales..."
+  [backdropDismiss]="false" (didDismiss)="onLoadingDismissed()"></ion-loading>
+<ion-toast [isOpen]="toastOpen" [message]="toastMessage" [color]="toastColor"
+  position="bottom" [duration]="1800" (didDismiss)="onToastDismissed()"></ion-toast>

@@ -1,0 +1,81 @@
+<ion-content [fullscreen]="true">
+  <main class="profile-layout">
+    <h1>Perfil</h1>
+    <section class="account-summary" aria-label="Resumen del cliente">
+      <div class="avatar-ring">
+        <div class="avatar">{{ initials }}</div>
+        <span class="verified" aria-label="Perfil de demostración">
+          <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+        </span>
+      </div>
+      <h2>{{ savedProfile.fullName }}</h2>
+      <p>Datos de tu cuenta</p>
+    </section>
+
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
+      <div class="profile-field" [class.invalid]="nameInvalid">
+        <div class="icon-tile purple"><ion-icon name="person-outline" aria-hidden="true"></ion-icon></div>
+        <div class="field-body">
+          <label for="profile-name">Nombre completo</label>
+          <input id="profile-name" type="text" autocomplete="name" formControlName="fullName"
+            [attr.aria-invalid]="nameInvalid" aria-describedby="profile-name-error" />
+          <p id="profile-name-error" *ngIf="nameInvalid" class="field-error" role="alert">{{ nameError }}</p>
+        </div>
+      </div>
+
+      <div class="profile-field" [class.invalid]="identityInvalid">
+        <div class="icon-tile yellow"><ion-icon name="card-outline" aria-hidden="true"></ion-icon></div>
+        <div class="field-body">
+          <label for="profile-id">Número de identidad</label>
+          <input id="profile-id" type="text" inputmode="numeric" maxlength="13"
+            formControlName="identity" [attr.aria-invalid]="identityInvalid"
+            aria-describedby="profile-id-error" />
+          <p id="profile-id-error" *ngIf="identityInvalid" class="field-error" role="alert">{{ identityError }}</p>
+        </div>
+      </div>
+
+      <div class="profile-field" [class.invalid]="phoneInvalid">
+        <div class="icon-tile mint"><ion-icon name="call-outline" aria-hidden="true"></ion-icon></div>
+        <div class="field-body">
+          <label for="profile-phone">Número de teléfono</label>
+          <input id="profile-phone" type="tel" inputmode="numeric" autocomplete="tel"
+            maxlength="8" formControlName="phone" [attr.aria-invalid]="phoneInvalid"
+            aria-describedby="profile-phone-error" />
+          <p id="profile-phone-error" *ngIf="phoneInvalid" class="field-error" role="alert">{{ phoneError }}</p>
+        </div>
+      </div>
+
+      <div class="profile-field" [class.invalid]="emailInvalid">
+        <div class="icon-tile green"><ion-icon name="mail-outline" aria-hidden="true"></ion-icon></div>
+        <div class="field-body">
+          <label for="profile-email">Correo electrónico</label>
+          <input id="profile-email" type="email" inputmode="email" autocomplete="email"
+            formControlName="email" [attr.aria-invalid]="emailInvalid"
+            aria-describedby="profile-email-error" />
+          <p id="profile-email-error" *ngIf="emailInvalid" class="field-error" role="alert">{{ emailError }}</p>
+        </div>
+      </div>
+
+      <div class="submit-area">
+        <ion-button type="submit" expand="block" class="save-button"
+          [disabled]="profileForm.invalid || isLoading">Guardar</ion-button>
+        <button *ngIf="profileForm.invalid && !isLoading" class="invalid-submit-overlay"
+          type="button" (click)="notifyInvalid()" aria-label="Guardar: corregir campos inválidos"></button>
+      </div>
+    </form>
+
+    <div class="logout-footer">
+      <ion-button expand="block" class="logout-button" (click)="logout()"
+        [disabled]="isLoading">
+        <ion-icon name="log-out-outline" slot="start" aria-hidden="true"></ion-icon>
+        Cerrar sesión
+      </ion-button>
+      <p>Demostración académica: cambios almacenados solo en memoria.</p>
+    </div>
+  </main>
+</ion-content>
+
+<ion-loading [isOpen]="isLoading" message="Actualizando sus datos personales..."
+  [backdropDismiss]="false" (didDismiss)="onLoadingDismissed()"></ion-loading>
+<ion-toast [isOpen]="toastOpen" [message]="toastMessage" [color]="toastColor"
+  position="bottom" [duration]="2000" (didDismiss)="onToastDismissed()"></ion-toast>

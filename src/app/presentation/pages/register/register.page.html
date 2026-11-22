@@ -1,0 +1,72 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="Back"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="brand-title">Tap’nPay<span class="brand-dot">●</span></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <main class="register-shell">
+    <h1>Create Account</h1>
+
+    <form [formGroup]="registrationForm" (ngSubmit)="registerUser()" novalidate>
+      <div class="form-field">
+        <label for="name">Name</label>
+        <input id="name" type="text" autocomplete="name" formControlName="name"
+          placeholder="e.g. John Doe" required
+          [ngClass]="{ 'field-invalid': isNameInvalid }"
+          [attr.aria-invalid]="isNameInvalid" aria-describedby="name-error" />
+        <p *ngIf="nameError" id="name-error" class="field-error">{{ nameError }}</p>
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input id="email" type="email" inputmode="email" autocomplete="email"
+          formControlName="email" placeholder="e.g. email@example.com" required
+          [ngClass]="{ 'field-invalid': isEmailInvalid }"
+          [attr.aria-invalid]="isEmailInvalid" aria-describedby="email-error" />
+        <p *ngIf="emailError" id="email-error" class="field-error">{{ emailError }}</p>
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <div class="input-with-action" [ngClass]="{ 'field-invalid': isPasswordInvalid }">
+          <input id="password" [type]="showPassword ? 'text' : 'password'"
+            autocomplete="new-password" formControlName="password" required
+            placeholder="Enter your password" [attr.aria-invalid]="isPasswordInvalid"
+            aria-describedby="password-error" />
+          <button type="button" class="password-action"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+            {{ showPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+        <p *ngIf="passwordError" id="password-error" class="field-error">{{ passwordError }}</p>
+      </div>
+
+      <div class="form-field">
+        <label for="phoneNumber">Phone number</label>
+        <input id="phoneNumber" type="tel" inputmode="numeric" autocomplete="tel"
+          formControlName="phoneNumber" required placeholder="Enter your phone"
+          [ngClass]="{ 'field-invalid': isPhoneNumberInvalid }"
+          [attr.aria-invalid]="isPhoneNumberInvalid" aria-describedby="phone-error" />
+        <p *ngIf="phoneNumberError" id="phone-error" class="field-error">{{ phoneNumberError }}</p>
+      </div>
+
+      <div class="terms-row">
+        <input id="acceptTerms" type="checkbox" formControlName="acceptTerms"
+          [ngClass]="{ 'field-invalid': isAcceptTermsInvalid }"
+          [attr.aria-invalid]="isAcceptTermsInvalid" aria-describedby="terms-error" />
+        <label for="acceptTerms">I accept <span>terms and conditions</span> and <span>privacy policy</span></label>
+      </div>
+      <p *ngIf="termsError" id="terms-error" class="field-error terms-error">{{ termsError }}</p>
+
+      <ion-button type="submit" expand="block" class="primary-button"
+        [disabled]="registrationForm.invalid">
+        Create a new account
+      </ion-button>
+    </form>
+  </main>
+</ion-content>

@@ -1,5 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { NgClass, NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -10,7 +11,10 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
+  ToastController,
 } from '@ionic/angular';
+import { finalize } from 'rxjs';
+import { AuthService } from '../../../application/services/auth.service';
 import { RegistrationFlowService } from '../../../application/services/registration-flow.service';
 import { User } from '../../../domain/models/user.interface';
 import { PASSWORD_PATTERN, PHONE_PATTERN } from '../../../domain/validators/registration.validators';
@@ -37,8 +41,12 @@ export class RegisterPage {
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly registrationFlow = inject(RegistrationFlowService);
+  private readonly authService = inject(AuthService);
+  private readonly toastController = inject(ToastController);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   showPassword = false;
+  isSubmitting = false;
 
   readonly registrationForm = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.pattern(/\S/)]],
@@ -93,9 +101,14 @@ export class RegisterPage {
     this.showPassword = !this.showPassword;
   }
 
+  // Paso 1: crear la cuenta (POST /register) y avisar con un Toast.
   registerUser(): void {
     if (this.registrationForm.invalid) {
       this.registrationForm.markAllAsTouched();
+      return;
+    }
+
+    if (this.isSubmitting) {
       return;
     }
 
@@ -107,9 +120,41 @@ export class RegisterPage {
       phoneNumber: formValues.phoneNumber,
     };
 
-    // Serialización usando la interfaz User. La demo NO envía datos a un servidor.
-    this.registrationFlow.prepareEmailVerification(user);
-    void this.router.navigateByUrl('/verify-email');
+    this.isSubmitting = true;
+
+    this.authService
+      .register(user)
+      .pipe(finalize(() => { this.isSubmitting = false; this.cdr.markForCheck(); }))
+      .subscribe({
+        next: () => {
+          void this.showToast('Account created! We sent a 6-digit code to your email.', 'success');
+          this.registrationFlow.prepareEmailVerification(user);
+          void this.router.navigateByUrl('/verify-email');
+        },
+        error: (error: HttpErrorResponse) => {
+          void this.showToast(this.getErrorMessage(error), 'danger');
+        },
+      });
+  }
+
+  private async showToast(message: string, color: 'success' | 'danger'): Promise<void> {
+    const toast = await this.toastController.create({
+      message,
+      duration: 3500,
+      position: 'top',
+      color,
+    });
+    await toast.present();
+  }
+
+  private getErrorMessage(error: HttpErrorResponse): string {
+    if (error.status === 0) {
+      return 'Could not connect to the server. Check your internet connection.';
+    }
+    const apiMessage = error.error?.message ?? error.error?.title;
+    return typeof apiMessage === 'string' && apiMessage
+      ? apiMessage
+      : 'Could not create the account. Please try again.';
   }
 
   private shouldDisplayError(control: AbstractControl): boolean {

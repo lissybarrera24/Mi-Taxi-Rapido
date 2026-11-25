@@ -64,7 +64,7 @@
       <p *ngIf="termsError" id="terms-error" class="field-error terms-error">{{ termsError }}</p>
 
       <ion-button type="submit" expand="block" class="primary-button"
-        [disabled]="registrationForm.invalid">
+        [disabled]="registrationForm.invalid || isSubmitting">
         Create a new account
       </ion-button>
     </form>
